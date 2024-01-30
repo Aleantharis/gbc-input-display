@@ -13,6 +13,7 @@ const assetsLoaded = () => {
 const assets = new Assets(
   {
     test: "img/test.jpg",
+    gbc: "img/gbc.png"
   },
   assetsLoaded
 );
@@ -123,7 +124,11 @@ function drawBackground() {
   // draw test image
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.drawImage(assets.getAsset("test"), 0, 0, canvas.width, canvas.height);
+  const img = assets.getAsset("gbc");
+
+  scalefactor = window.innerHeight / img.height > window.innerWidth / img.width ? window.innerWidth / img.width : window.innerHeight / img.height;
+
+  ctx.drawImage(img, 0, 0, img.width * scalefactor, img.height * scalefactor);
   ctx.restore();
 }
 
