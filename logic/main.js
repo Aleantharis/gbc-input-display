@@ -24,7 +24,7 @@ var gameLoop;
 var canvasMinSize = 0;
 //const api = new gamepadAPI();
 const padHelper = new GamepadHelper();
-var gamepad;
+var controllers;
 
 // "Loading", "Stopped", "Running"
 var gameState = "Loading";
@@ -99,6 +99,7 @@ function drawDebug() {
   ctx.textBaseline = "bottom";
 
   //const gamepad = navigator.getGamepads()[0]; // this is just a stub ;)
+  var gamepad = controllers[0];
   var debugOutput = "";
 
   padHelper.getButtonStates(gamepad.buttons).forEach((element) => {
@@ -113,7 +114,7 @@ function drawDebug() {
       console.log(e);
     }
 
-    debugOutput += (element.touched || element.triggered || element.value) > 0 ? "[Button " + i + "]" : "";
+    debugOutput += (e.touched || e.triggered || e.value) > 0 ? "[Button " + i + "]" : "";
     
   }
 
@@ -132,6 +133,7 @@ function drawBackground() {
 }
 
 function draw() {
+  controllers = navigator.getGamepads();
   //api.updateInputs();
 
   clearCanvas();
@@ -182,13 +184,13 @@ function startGame() {
 }
 
 function padConnectedListener(event) {
-  gamepad = event.gamepad;
+  //gamepad = event.gamepad;
   console.log("Gamepad connected.");
   //console.table(this.controller);
 }
 
 function padDisconnectedListener(event) {
-  gamepad = null;
+  //gamepad = null;
   console.log("Gamepad disconnected.");
 }
 
