@@ -108,7 +108,7 @@ export class GBCGamePad extends BaseGamePad {
     }
 
     draw(ctx, buttons) {
-        super(ctx, buttons);
+        super.draw(ctx, buttons);
 
         var scalefactor = window.innerHeight / this.height > window.innerWidth / this.width ? window.innerWidth / this.width : window.innerHeight / this.height;
 
