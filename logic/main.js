@@ -184,12 +184,14 @@ function startGame() {
 }
 
 function padConnectedListener(event) {
+  controllers = navigator.getGamepads();
   //gamepad = event.gamepad;
   console.log("Gamepad connected.");
   //console.table(this.controller);
 }
 
 function padDisconnectedListener(event) {
+  controllers = null;
   //gamepad = null;
   console.log("Gamepad disconnected.");
 }
