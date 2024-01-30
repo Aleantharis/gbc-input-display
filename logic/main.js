@@ -2,6 +2,7 @@ import { Constants as CONST } from "./const.js";
 import { Assets } from "./const.js";
 //import { gamepadAPI } from "./gamepadAPI.js";
 import { GamepadHelper } from "./GamepadHelper.js";
+import { GBCGamePad } from "./gamePads.js";
 
 const assetsLoaded = () => {
   console.log("assets loaded");
@@ -9,6 +10,7 @@ const assetsLoaded = () => {
   // trigger resize to trigger redraw for intro
   resizeCanvas();
   gameState = "Stopped";
+  gamepadDraw = new GBCGamePad(assets.getAsset("bgc"));
 };
 const assets = new Assets(
   {
@@ -26,38 +28,7 @@ var canvasMinSize = 0;
 //const api = new gamepadAPI();
 const padHelper = new GamepadHelper();
 var controllers;
-
-const btnDrawStats = []
-btnDrawStats[14] = 
-  {
-    "id": 14, //left
-    "x": 195,
-    "y": 2038,
-    "width": 160,
-    "height": 168
-  };
-btnDrawStats[13] = 
-  {
-    "id": 13, // down
-    "x": 333,
-    "y": 2205,
-    "width": 160,
-    "height": 139
-  };/*,
-  {
-    "id": 12, // up
-    "x": 195,
-    "y": 2205,
-    "width": 160,
-    "height": 168
-  },
-  {
-    "id": 15, // right
-    "x": 195,
-    "y": 2205,
-    "width": 160,
-    "height": 168
-  }*/
+var gamepadDraw;
 
 // "Loading", "Stopped", "Running"
 var gameState = "Loading";
@@ -177,10 +148,14 @@ function draw() {
 
   clearCanvas();
 
-  drawBackground();
+  if(controllers[0]) {
+    gamepadDraw.draw(ctx, controllers[0].buttons);
+  }
 
-  ctx.beginPath();
-  ctx.save();
+  //drawBackground();
+
+  // ctx.beginPath();
+  // ctx.save();
   //ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
   //   ctx.fillRect(
   //     0,
@@ -189,11 +164,11 @@ function draw() {
   //     tileSize * boardSizes[boardSizeIdx].Y
   //   );
 
-  ctx.restore();
-  ctx.closePath();
+  // ctx.restore();
+  // ctx.closePath();
 
   if (DEBUG) {
-    drawDebug();
+    //drawDebug();
   }
 }
 
