@@ -87,12 +87,20 @@ function padConnectedListener(event) {
   //gamepad = event.gamepad;
   console.log("Gamepad connected.");
   //console.table(this.controller);
+
+  if(gameState === "Stopped") {
+    startGame();
+  }
 }
 
 function padDisconnectedListener(event) {
   controllers = null;
   //gamepad = null;
   console.log("Gamepad disconnected.");
+
+  if(gameState === "Running") {
+    stopGame();
+  }
 }
 
 // document.getElementById("fMenu").onsubmit = startGameHandler;
@@ -104,13 +112,7 @@ window.addEventListener("gamepadconnected", padConnectedListener);
 window.addEventListener("gamepaddisconnected", padDisconnectedListener);
 
 document.onkeydown = function (evt) {
-  var isEscape = false;
-  if ("key" in evt) {
-    isEscape = evt.key === "Escape" || evt.key === "Esc";
-  } else {
-    isEscape = evt.keyCode === 27;
-  }
-  if (isEscape && controllers) {
+  if (controllers) {
     switch (gameState) {
       case "Running":
         stopGame();
@@ -121,5 +123,3 @@ document.onkeydown = function (evt) {
     }
   }
 };
-
-DEBUG = true;
