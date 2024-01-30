@@ -209,7 +209,7 @@ document.onkeydown = function (evt) {
   } else {
     isEscape = evt.keyCode === 27;
   }
-  if (isEscape && gamepad) {
+  if (isEscape && controllers) {
     switch (gameState) {
       case "Running":
         stopGame();
