@@ -221,7 +221,8 @@ function padDisconnectedListener(event) {
   }
 }
 
-function triggerConfigRead() {
+function triggerConfigRead(event) {
+	event.preventDefault();
   keyCfg = {};
   lastPressedButton = [];
   keyCfgIdx = 0;
