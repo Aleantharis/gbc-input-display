@@ -27,6 +27,38 @@ var canvasMinSize = 0;
 const padHelper = new GamepadHelper();
 var controllers;
 
+const btnDrawStats = []
+btnDrawStats[14] = 
+  {
+    "id": 14, //left
+    "x": 195,
+    "y": 2038,
+    "width": 160,
+    "height": 168
+  };
+btnDrawStats[13] = 
+  {
+    "id": 13, // down
+    "x": 333,
+    "y": 2205,
+    "width": 160,
+    "height": 139
+  };/*,
+  {
+    "id": 12, // up
+    "x": 195,
+    "y": 2205,
+    "width": 160,
+    "height": 168
+  },
+  {
+    "id": 15, // right
+    "x": 195,
+    "y": 2205,
+    "width": 160,
+    "height": 168
+  }*/
+
 // "Loading", "Stopped", "Running"
 var gameState = "Loading";
 
@@ -95,9 +127,6 @@ function clearCanvas() {
 function drawDebug() {
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.font = Math.floor(canvasMinSize * 0.05) + "px Segoe UI";
-  ctx.fillStyle = "White";
-  ctx.textBaseline = "bottom";
 
   //const gamepad = navigator.getGamepads()[0]; // this is just a stub ;)
   var gamepad = controllers[0];
@@ -107,16 +136,26 @@ function drawDebug() {
   for (let i = 0; i < gamepad.buttons.length; i++) {
     var e = btnStates[i];
     if(e.touched || e.triggered || e.value > 0){
-      console.log(e);
+      if(btnDrawStats[i]) {
+        scalefactor = window.innerHeight / img.height > window.innerWidth / img.width ? window.innerWidth / img.width : window.innerHeight / img.height;
+        const rec = btnDrawStats[i];
+
+        ctx.fillStyle = "rgba(255, 0, 0, 0.4)"
+        ctx.fillRect(rec.x * scalefactor, rec.y * scalefactor, rec.width * scalefactor, rec.height * scalefactor);
+      }
     }
 
     debugOutput += (e.touched || e.triggered || e.value) > 0 ? "[Button " + i + "]" : "";
     
   }
 
+  ctx.font = Math.floor(canvasMinSize * 0.05) + "px Segoe UI";
+  ctx.fillStyle = "White";
+  ctx.textBaseline = "bottom";
   ctx.fillText(debugOutput, 50, 50, canvas.width * 0.8);
   //ctx.fillText(api.buttonsStatus, 0, 0, canvas.width * 0.8);
   //console.log(api.buttonsStatus)
+
   ctx.restore();
 }
 
