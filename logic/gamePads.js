@@ -1,6 +1,6 @@
 //import { Assets } from "./const";
 
-class Rectangle{
+class Rectangle {
     x;
     y;
     width;
@@ -54,7 +54,8 @@ class CircleButtonDraw extends ButtonDraw {
     draw(ctx, scalefactor) {
         ctx.fillStyle = this.color
         ctx.beginPath();
-        ctx.arc(this.rec.x * scalefactor, this.rec.y * scalefactor, (this.rec.width * scalefactor) / 2, 0, Math.PI * 2);
+        var radius = (this.rec.width * scalefactor) / 2;
+        ctx.arc((this.rec.x * scalefactor) + (radius / 2), (this.rec.y * scalefactor) + (radius / 2), radius, 0, Math.PI * 2);
         ctx.fill();
     }
 }
@@ -118,7 +119,7 @@ export class GBCGamePad extends BaseGamePad {
             const e = buttons[i];
 
             if (e.touched || e.triggered || e.value > 0) {
-                if(this.#btnDraw[this.#btnMap[i]]) {
+                if (this.#btnDraw[this.#btnMap[i]]) {
                     this.#btnDraw[this.#btnMap[i]].draw(ctx, scalefactor);
                 }
             }
