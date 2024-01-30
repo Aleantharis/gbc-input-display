@@ -55,7 +55,7 @@ class CircleButtonDraw extends ButtonDraw {
         ctx.fillStyle = this.color
         ctx.beginPath();
         var radius = (this.rec.width * scalefactor) / 2;
-        ctx.arc((this.rec.x * scalefactor) + (radius / 2), (this.rec.y * scalefactor) + (radius / 2), radius, 0, Math.PI * 2);
+        ctx.arc((this.rec.x * scalefactor) + radius, (this.rec.y * scalefactor) + radius, radius, 0, Math.PI * 2);
         ctx.fill();
     }
 }
