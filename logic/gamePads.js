@@ -6,7 +6,6 @@ class Rectangle{
     width;
     height;
     constructor(x, y, width, height) {
-        this.id = id;
         this.x = x;
         this.y = y;
         this.height = height
