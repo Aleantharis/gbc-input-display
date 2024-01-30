@@ -102,13 +102,8 @@ function drawDebug() {
   var gamepad = controllers[0];
   var debugOutput = "";
 
-  padHelper.getButtonStates(gamepad.buttons).forEach((element) => {
-    debugOutput += element.touched || element.triggered ? element.value : "";
-    //debugOutput += element;
-  });
-
   var btnStates = padHelper.getButtonStates(gamepad.buttons);
-  for (let i = 0; i < gamepad.buttons; i++) {
+  for (let i = 0; i < gamepad.buttons.length; i++) {
     var e = btnStates[i];
     if(e.touched || e.triggered || e.value > 0){
       console.log(e);
@@ -118,7 +113,7 @@ function drawDebug() {
     
   }
 
-  ctx.fillText(debugOutput, 0, 0, canvas.width * 0.8);
+  ctx.fillText(debugOutput, 50, 50, canvas.width * 0.8);
   //ctx.fillText(api.buttonsStatus, 0, 0, canvas.width * 0.8);
   //console.log(api.buttonsStatus)
   ctx.restore();
