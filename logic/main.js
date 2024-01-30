@@ -10,7 +10,7 @@ const assetsLoaded = () => {
   // trigger resize to trigger redraw for intro
   resizeCanvas();
   gameState = "Stopped";
-  gamepadDraw = new GBCGamePad(assets.getAsset("bgc"));
+  gamepadDraw = new GBCGamePad(assets.getAsset("gbc"));
 };
 const assets = new Assets(
   {
