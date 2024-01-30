@@ -11,39 +11,21 @@
 </head>
 
 <body>
-	<!-- <div class="pnlMenu">
+	<div class="pnlMenu">
 		<form id="fMenu" class="fMenu">
+			<select id="sController"></select>
+			<select id="sConfig">
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+			</select>
+			<output id="lbControllerInfo"></output>
 			<select id="sTheme">
-				<option value="modern">Modern</option>
-				<option value="cyberpunk">Cyberpunk</option>
+				<option value="gbc">Gameboy Color - Photo</option>
 			</select>
-			<select id="sDiff">
-				<option value="0">Novice</option>
-				<option value="25">Apprentice</option>
-				<option value="50">Adept</option>
-				<option value="75">Expert</option>
-				<option value="100">Master</option>
-			</select>
-			<div id="pnlLives" class="pnlLives">
-				<label for="inLives" id="lblLives">Lockpicks: 1</label>
-				<input type="range" id="inLives" min="1" max="10" step="1" value="1" list="markers">
-				<datalist id="markers">
-					<option value="1"></option>
-					<option value="2"></option>
-					<option value="3"></option>
-					<option value="4"></option>
-					<option value="5"></option>
-					<option value="6"></option>
-					<option value="7"></option>
-					<option value="8"></option>
-					<option value="9"></option>
-					<option value="10"></option>
-				</datalist>
-			</div>
-			<input type="submit" value="Start" id="btnStart" disabled>
-			<input type="checkbox" id="cbDebug" class="cbDebug" value="DEBUG" name="DEBUG">
 		</form>
-	</div> -->
+	</div>
 	<canvas id="cvGame" class="cvGame"></canvas>
 </body>
 

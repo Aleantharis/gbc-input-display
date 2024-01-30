@@ -2,22 +2,12 @@ body {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	margin: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-body.cyberpunk {
-	background: url('../img/cyberpunk/background.jpg');
-	background-size: contain;
-}
-
-body.modern {
-	background: url('../img/modern/background.jpg');
-	background-size: contain;
+	background-color: #1a1d21;
 }
 
 .pnlMenu {
-	display: inline-block;
+	display: flex;
 }
 
 .fMenu {
@@ -88,7 +78,7 @@ label, output {
 	text-align: center;
 }
 
-.pnlLives {
+.pnlSize {
     display: inline-flex;
     flex-direction: column;
     border: 1px solid white;

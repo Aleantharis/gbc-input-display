@@ -15,14 +15,16 @@ class Rectangle {
 
 class ButtonDraw {
     #id;
+    #name;
     #x;
     #y;
     #width;
     #height;
     color;
 
-    constructor(id, x, y, width, height, color) {
+    constructor(id, name, x, y, width, height, color) {
         this.#id = id;
+        this.#name = name;
         this.#x = x;
         this.#y = y;
         this.#height = height
@@ -35,7 +37,15 @@ class ButtonDraw {
         ctx.fillStyle = this.color;
         ctx.textBaseline = "bottom";
 
-        ctx.fillText("[Button " + this.#id + "]", 50, 50);
+        ctx.fillText("[" + this.#id + ": " + this.#name + "]", 50, 50);
+    }
+
+    get name() {
+        return this.#name;
+    }
+
+    get id() {
+        return this.#id;
     }
 
     get rec() {
@@ -44,9 +54,56 @@ class ButtonDraw {
 }
 
 class RectButtonDraw extends ButtonDraw {
+    #drawTail;
+    #tailDirection;
+
+    constructor(id, name, x, y, width, height, color, drawTail, tailDirection) {
+        super(id, name, x, y, width, height, color);
+        this.#drawTail = drawTail;
+        this.#tailDirection = tailDirection;
+    }
+
     draw(ctx, scalefactor) {
+        let scaleX = this.rec.x * scalefactor;
+        let scaleY = this.rec.y * scalefactor;
+        let scaleW = this.rec.width * scalefactor;
+        let scaleH = this.rec.height * scalefactor;
+
         ctx.fillStyle = this.color
-        ctx.fillRect(this.rec.x * scalefactor, this.rec.y * scalefactor, this.rec.width * scalefactor, this.rec.height * scalefactor);
+        ctx.fillRect(scaleX, scaleY, scaleW, scaleH);
+
+        if (this.#drawTail) {
+            switch (this.#tailDirection) {
+                case 'R':
+                    ctx.beginPath();
+                    ctx.moveTo(scaleX + ( scaleW * 1.5), scaleY + (scaleH / 2));
+                    ctx.lineTo(scaleX + scaleW, scaleY);
+                    ctx.lineTo(scaleX + scaleW, scaleY + scaleH);
+                    ctx.fill();
+                    break;
+                case 'L':
+                    ctx.beginPath();
+                    ctx.moveTo(scaleX - (scaleW * 0.5), scaleY + (scaleH / 2));
+                    ctx.lineTo(scaleX, scaleY);
+                    ctx.lineTo(scaleX, scaleY + scaleH);
+                    ctx.fill();
+                    break;
+                case 'U':
+                    ctx.beginPath();
+                    ctx.moveTo(scaleX + (scaleW / 2), scaleY - (scaleH * 0.5));
+                    ctx.lineTo(scaleX, scaleY);
+                    ctx.lineTo(scaleX + scaleW, scaleY);
+                    ctx.fill();
+                    break;
+                case 'D':
+                    ctx.beginPath();
+                    ctx.moveTo(scaleX + (scaleW / 2), scaleY + (scaleH * 1.5));
+                    ctx.lineTo(scaleX, scaleY + scaleH);
+                    ctx.lineTo(scaleX + scaleW, scaleY + scaleH);
+                    ctx.fill();
+                    break;
+            }
+        }
     }
 }
 
@@ -75,11 +132,12 @@ class BaseGamePad {
         return this.#background.height;
     }
 
-    draw(ctx, buttons) {
+    draw(canvas, buttons) {
+        let ctx = canvas.getContext("2d");
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        var scalefactor = window.innerHeight / this.#background.height > window.innerWidth / this.#background.width ? window.innerWidth / this.#background.width : window.innerHeight / this.#background.height;
+        var scalefactor = canvas.height / this.#background.height > canvas.width / this.#background.width ? canvas.width / this.#background.width : canvas.height / this.#background.height;
 
         ctx.drawImage(this.#background, 0, 0, this.#background.width * scalefactor, this.#background.height * scalefactor);
         ctx.restore();
@@ -90,40 +148,73 @@ export class GBCGamePad extends BaseGamePad {
     #btnMap = [];
     #btnDraw = [];
 
-    constructor(background, buttonMap = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) {
+    constructor(background, buttonMap = { "Up": [12], "Down": [13], "Left": [14], "Right": [15], "B": [0], "A": [1], "Select": [8], "Start": [9] }) {
         super(background);
-        this.#btnMap = buttonMap;
+        //this.#btnMap = buttonMap;
+        this.#btnMap = [];
 
         // Up
-
-        this.#btnDraw[12] = new RectButtonDraw(12, 333, 1892, 165, 146, "rgba(255, 0, 0, 0.4)");
+        var cKey = "Up";
+        this.#btnDraw[cKey] = new RectButtonDraw(buttonMap[cKey], cKey, 333, 1892, 165, 146, "rgba(255, 0, 0, 0.4)", true, 'D');
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // Down
-        this.#btnDraw[13] = new RectButtonDraw(13, 333, 2205, 165, 146, "rgba(255, 0, 0, 0.4)");
+        cKey = "Down";
+        this.#btnDraw[cKey] = new RectButtonDraw(buttonMap[cKey], cKey, 333, 2205, 165, 146, "rgba(255, 0, 0, 0.4)", true, 'U');
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // Left
-        this.#btnDraw[14] = new RectButtonDraw(14, 195, 2038, 141, 168, "rgba(255, 0, 0, 0.4)");
+        cKey = "Left";
+        this.#btnDraw[cKey] = new RectButtonDraw(buttonMap[cKey], cKey, 195, 2038, 141, 168, "rgba(255, 0, 0, 0.4)", true, 'R');
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // Right
-        this.#btnDraw[15] = new RectButtonDraw(15, 499, 2038, 141, 168, "rgba(255, 0, 0, 0.4)");
+        cKey = "Right";
+        this.#btnDraw[cKey] = new RectButtonDraw(buttonMap[cKey], cKey, 499, 2038, 141, 168, "rgba(255, 0, 0, 0.4)", true, 'L');
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // B
-        this.#btnDraw[0] = new CircleButtonDraw(0, 1147, 2055, 223, 223, "rgba(255, 0, 0, 0.4)");
+        cKey = "B";
+        this.#btnDraw[cKey] = new CircleButtonDraw(buttonMap[cKey], cKey, 1147, 2055, 223, 223, "rgba(255, 0, 0, 0.4)");
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // A
-        this.#btnDraw[1] = new CircleButtonDraw(1, 1474, 1946, 226, 226, "rgba(255, 0, 0, 0.4)");
+        cKey = "A";
+        this.#btnDraw[cKey] = new CircleButtonDraw(buttonMap[cKey], cKey, 1474, 1946, 226, 226, "rgba(255, 0, 0, 0.4)");
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // Select
-        this.#btnDraw[8] = new RectButtonDraw(8, 732, 2606, 160, 68, "rgba(255, 0, 0, 0.4)");
+        cKey = "Select";
+        this.#btnDraw[cKey] = new RectButtonDraw(buttonMap[cKey], cKey, 732, 2606, 160, 68, "rgba(255, 0, 0, 0.4)", false, '-');
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
 
         // Start
-        this.#btnDraw[9] = new RectButtonDraw(9, 996, 2606, 160, 68, "rgba(255, 0, 0, 0.4)");
+        cKey = "Start";
+        this.#btnDraw[cKey] = new RectButtonDraw(buttonMap[cKey], cKey, 996, 2606, 160, 68, "rgba(255, 0, 0, 0.4)", false, '-');
+        for (let i = 0; i < buttonMap[cKey].length; i++) {
+            this.#btnMap[buttonMap[cKey][i]] = cKey;
+        }
     }
 
-    draw(ctx, buttons) {
-        super.draw(ctx, buttons);
+    draw(canvas, buttons) {
+        super.draw(canvas, buttons);
+        let ctx = canvas.getContext("2d");
 
-        var scalefactor = window.innerHeight / this.height > window.innerWidth / this.width ? window.innerWidth / this.width : window.innerHeight / this.height;
+        var scalefactor = canvas.height / this.height > canvas.width / this.width ? canvas.width / this.width : canvas.height / this.height;
 
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
