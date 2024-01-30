@@ -137,7 +137,7 @@ function drawDebug() {
     var e = btnStates[i];
     if(e.touched || e.triggered || e.value > 0){
       if(btnDrawStats[i]) {
-        scalefactor = window.innerHeight / img.height > window.innerWidth / img.width ? window.innerWidth / img.width : window.innerHeight / img.height;
+        var scalefactor = window.innerHeight / img.height > window.innerWidth / img.width ? window.innerWidth / img.width : window.innerHeight / img.height;
         const rec = btnDrawStats[i];
 
         ctx.fillStyle = "rgba(255, 0, 0, 0.4)"
@@ -165,7 +165,7 @@ function drawBackground() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   const img = assets.getAsset("gbc");
 
-  scalefactor = window.innerHeight / img.height > window.innerWidth / img.width ? window.innerWidth / img.width : window.innerHeight / img.height;
+  var scalefactor = window.innerHeight / img.height > window.innerWidth / img.width ? window.innerWidth / img.width : window.innerHeight / img.height;
 
   ctx.drawImage(img, 0, 0, img.width * scalefactor, img.height * scalefactor);
   ctx.restore();
