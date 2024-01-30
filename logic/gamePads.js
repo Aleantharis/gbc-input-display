@@ -113,11 +113,11 @@ export class GBCGamePad extends BaseGamePad {
         // A
         this.#btnDraw[1] = new CircleButtonDraw(1, 1474, 1946, 226, 226, "rgba(255, 0, 0, 0.4)");
 
-        // Start
-        this.#btnDraw[9] = new RectButtonDraw(9, 732, 2606, 160, 68, "rgba(255, 0, 0, 0.4)");
-
         // Select
-        this.#btnDraw[8] = new RectButtonDraw(8, 996, 2606, 160, 68, "rgba(255, 0, 0, 0.4)");
+        this.#btnDraw[8] = new RectButtonDraw(8, 732, 2606, 160, 68, "rgba(255, 0, 0, 0.4)");
+
+        // Start
+        this.#btnDraw[9] = new RectButtonDraw(9, 996, 2606, 160, 68, "rgba(255, 0, 0, 0.4)");
     }
 
     draw(ctx, buttons) {
