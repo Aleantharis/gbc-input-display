@@ -1,6 +1,6 @@
 import { Constants as CONST } from "./const.js";
 import { Assets } from "./const.js";
-import { GBCGamePad } from "./gamePads.js";
+import { FlatGBCGamePad, ImageGBCGamePad } from "./gamePads.js";
 
 const assetsLoaded = () => {
   console.log("assets loaded");
@@ -110,6 +110,27 @@ function draw() {
   }
 }
 
+function loadGamePadObj() {
+  switch(activeTheme) {
+    case "gbc":
+      gamepadDraw = new ImageGBCGamePad(assets.getAsset(activeTheme), keyCfg);
+    break;
+    case "fgbc-y":
+      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(243, 173, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)");
+    break;
+    case "fgbc-g":
+      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(173, 243, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)");
+    break;
+    case "fgbc-r":
+      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(245, 5, 89, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)");
+    break;
+    default: 
+      stopGame();
+      console.log("theme could not be found");
+    break;
+  }
+}
+
 
 function stopGame() {
   gameState = "Stopped";
@@ -125,7 +146,7 @@ function startGame() {
   }
 
   if (JSON.stringify(keyCfg) !== '{}') {
-    gamepadDraw = new GBCGamePad(assets.getAsset(activeTheme), keyCfg);
+    loadGamePadObj();    
     document.getElementById("lbControllerInfo").title = JSON.stringify(keyCfg);
   }
   else {
@@ -138,6 +159,20 @@ function startGame() {
   // force resize to recalc tilesize
   resizeCanvas();
 }
+
+function updateActiveTheme() {
+  if (gameState === "Running") {
+    stopGame();
+  }
+
+  activeTheme = document.getElementById("sTheme").value;
+  loadGamePadObj();
+  
+  if (controllers[activeCtrl]) {
+    startGame();
+  }
+}
+document.getElementById("sTheme").addEventListener("change", updateActiveTheme);
 
 function updateCtrlLabel() {
   document.getElementById("lbControllerInfo").innerText = controllers[activeCtrl] ? controllers[activeCtrl].id : "Please press a button on your controller to start!";
