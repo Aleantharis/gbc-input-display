@@ -115,14 +115,16 @@ class RectButtonDraw2 extends ButtonDraw {
     #activeTextColor;
     #textColor;
     #text;
+    #cornerRadius;
 
-    constructor(id, name, x, y, width, height, text, activeBtnColor, btnColor, activeTextColor, textColor) {
+    constructor(id, name, x, y, width, height, text, activeBtnColor, btnColor, activeTextColor, textColor, cornerRadius) {
         super(id, name, x, y, width, height, "-", "-");
         this.#activeBtnColor = activeBtnColor;
         this.#btnColor = btnColor;
         this.#activeTextColor = activeTextColor;
         this.#textColor = textColor;
         this.#text = text;
+        this.#cornerRadius = cornerRadius;
     }
 
     draw(ctx, scalefactor, active) {
@@ -130,9 +132,13 @@ class RectButtonDraw2 extends ButtonDraw {
         let scaleY = this.rec.y * scalefactor;
         let scaleW = this.rec.width * scalefactor;
         let scaleH = this.rec.height * scalefactor;
+        let scaleC = this.#cornerRadius * scalefactor;
 
+        ctx.beginPath();
         ctx.fillStyle = active ? this.#activeBtnColor : this.#btnColor;
-        ctx.fillRect(scaleX, scaleY, scaleW, scaleH);
+        //ctx.fillRect(scaleX, scaleY, scaleW, scaleH);
+        ctx.roundRect(scaleX, scaleY, scaleW, scaleH, scaleC);
+        ctx.fill();
 
         ctx.fillStyle = active ? this.#activeTextColor : this.#textColor;
         var fontSize = Math.floor(scaleH * 0.8)
@@ -150,6 +156,43 @@ class CircleButtonDraw extends ButtonDraw {
         var radius = (this.rec.width * scalefactor) / 2;
         ctx.arc((this.rec.x * scalefactor) + radius, (this.rec.y * scalefactor) + radius, radius, 0, Math.PI * 2);
         ctx.fill();
+    }
+}
+
+class CircleButtonDraw2 extends ButtonDraw {    
+    #activeBtnColor;
+    #btnColor;
+    #activeTextColor;
+    #textColor;
+    #text;
+
+    constructor(id, name, x, y, width, height, text, activeBtnColor, btnColor, activeTextColor, textColor) {
+        super(id, name, x, y, width, height, "-", "-");
+        this.#activeBtnColor = activeBtnColor;
+        this.#btnColor = btnColor;
+        this.#activeTextColor = activeTextColor;
+        this.#textColor = textColor;
+        this.#text = text;
+    }
+
+    draw(ctx, scalefactor, active) {
+        let scaleX = this.rec.x * scalefactor;
+        let scaleY = this.rec.y * scalefactor;
+        let scaleW = this.rec.width * scalefactor;
+        let scaleH = this.rec.height * scalefactor;
+
+        ctx.fillStyle = active ? this.#activeBtnColor : this.#btnColor;
+        ctx.beginPath();
+        var radius = (this.rec.width * scalefactor) / 2;
+        ctx.arc((this.rec.x * scalefactor) + radius, (this.rec.y * scalefactor) + radius, radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = active ? this.#activeTextColor : this.#textColor;
+        var fontSize = Math.floor(scaleH * 0.8)
+        ctx.font = "bold " + fontSize + "px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(this.#text, scaleX + (scaleW * 0.5), scaleY + Math.round(scaleH *0.5)+ 1, scaleW);
     }
 }
 
@@ -174,6 +217,7 @@ export class FlatGBCGamePad extends BaseGamePad {
     #btnMap = [];
     #btnDraw = [];
     #baseWidth = 1000;
+    #cornerRad = 5;
 
     get btnMap() {
         return this.#btnMap;
@@ -187,63 +231,63 @@ export class FlatGBCGamePad extends BaseGamePad {
         super();
         this.#btnMap = [];
 
-        // todo: layout buttons on pixel grid, set that as base-width with coords rel. on that grid
-        // todo: round button corners for sel/start
-        // todo: update round buttons and layout in cross
-        // todo: space buttons like in image
+        // TODO: layout buttons on pixel grid, set that as base-width with coords rel. on that grid
+        // TODO: space buttons like in image
 
         // Up
         var cKey = "Up";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 100, 50, 50, 50, "U", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 100, 50, 50, 50, "U", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Down
         cKey = "Down";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 100, 150, 50, 50, "D", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 100, 150, 50, 50, "D", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Left
         cKey = "Left";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 50, 100, 50, 50, "L", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 50, 100, 50, 50, "L", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Right
         cKey = "Right";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 150, 100, 50, 50, "R", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 150, 100, 50, 50, "R", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
+        // TODO: add x/y to verify layout? also add L/R button left and right of all, also rotate select and start
+
         // B
         cKey = "B";
-        this.#btnDraw[cKey] = new CircleButtonDraw(buttonMap[cKey], cKey, 1147, 2055, 223, 223, "rgba(255, 0, 0, 0.4)", "rgba(10, 10, 10, 0.1)");
+        this.#btnDraw[cKey] = new CircleButtonDraw2(buttonMap[cKey], cKey, 550, 150, 50, 50, "B", activeBtnColor, btnColor, activeTextColor, textColor);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // A
         cKey = "A";
-        this.#btnDraw[cKey] = new CircleButtonDraw(buttonMap[cKey], cKey, 1474, 1946, 226, 226, "rgba(255, 0, 0, 0.4)", "rgba(10, 10, 10, 0.1)");
+        this.#btnDraw[cKey] = new CircleButtonDraw2(buttonMap[cKey], cKey, 600, 100, 50, 50, "A", activeBtnColor, btnColor, activeTextColor, textColor);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Select
         cKey = "Select";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 300, 100, 100, 50, "Select", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 250, 100, 100, 50, "Select", activeBtnColor, btnColor, activeTextColor, textColor, 2*this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Start
         cKey = "Start";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 450, 100, 100, 50, "Start", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 400, 100, 100, 50, "Start", activeBtnColor, btnColor, activeTextColor, textColor, 2*this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }

@@ -21,7 +21,7 @@ const assets = new Assets(
 var canvas = document.getElementById("cvGame");
 var ctx = canvas.getContext("2d");
 var gameLoop;
-var controllers;
+var controllers = navigator.getGamepads();
 var activeCtrl = 0;
 var activeCfg = 0;
 var activeTheme = "gbc";
@@ -234,6 +234,7 @@ function updateInputSelector() {
 
   updateCtrlLabel();
 }
+updateInputSelector();
 
 function padConnectedListener(event) {
   controllers = navigator.getGamepads();
@@ -248,12 +249,12 @@ function padConnectedListener(event) {
 }
 
 function padDisconnectedListener(event) {
-  controllers = null;
+  controllers = navigator.getGamepads();
   console.log("Gamepad disconnected.");
 
-  if (gameState === "Running") {
-    stopGame();
-  }
+  // if (gameState === "Running") {
+  //   stopGame();
+  // }
 }
 
 function triggerConfigRead(event) {
@@ -299,3 +300,5 @@ document.onkeydown = function (evt) {
     }
   }
 };
+
+// TODO: move all non-ui specific logic to seperate file, for electron app.
