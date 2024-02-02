@@ -231,33 +231,46 @@ export class FlatGBCGamePad extends BaseGamePad {
         super();
         this.#btnMap = [];
 
+        let padding = 50;
+        let columnWidth = (this.#baseWidth - (2 * padding)) / 4;
+        let btnSpacing = 6;
+        let btnSize = (columnWidth - (2 * btnSpacing)) / 3;
+        
+        let startBegin = padding + (columnWidth * 1.5);
+        let startSpacing = 15;
+        let startSize = (columnWidth - startSpacing) / 2;
+        let startY = ((padding + columnWidth) / 2);
+
+        let abBegin = padding + (3 * columnWidth);
+
+
         // TODO: layout buttons on pixel grid, set that as base-width with coords rel. on that grid
         // TODO: space buttons like in image
 
         // Up
         var cKey = "Up";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 100, 50, 50, 50, "U", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, padding + btnSpacing + btnSize, padding, btnSize, btnSize, "U", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Down
         cKey = "Down";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 100, 150, 50, 50, "D", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, padding + btnSpacing + btnSize, padding + (2 * btnSpacing) + (2 * btnSize), btnSize, btnSize, "D", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Left
         cKey = "Left";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 50, 100, 50, 50, "L", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, padding, padding + btnSpacing + btnSize, btnSize, btnSize, "L", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Right
         cKey = "Right";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 150, 100, 50, 50, "R", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, padding + (2 * btnSpacing) + (2 * btnSize), padding + btnSpacing + btnSize, btnSize, btnSize, "R", activeBtnColor, btnColor, activeTextColor, textColor, this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
@@ -266,28 +279,28 @@ export class FlatGBCGamePad extends BaseGamePad {
 
         // B
         cKey = "B";
-        this.#btnDraw[cKey] = new CircleButtonDraw2(buttonMap[cKey], cKey, 550, 150, 50, 50, "B", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new CircleButtonDraw2(buttonMap[cKey], cKey, abBegin + btnSpacing + btnSize, padding + (2 * btnSpacing) + (2 * btnSize), btnSize, btnSize, "B", activeBtnColor, btnColor, activeTextColor, textColor);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // A
         cKey = "A";
-        this.#btnDraw[cKey] = new CircleButtonDraw2(buttonMap[cKey], cKey, 600, 100, 50, 50, "A", activeBtnColor, btnColor, activeTextColor, textColor);
+        this.#btnDraw[cKey] = new CircleButtonDraw2(buttonMap[cKey], cKey, abBegin + (2 * btnSpacing) + (2 * btnSize), padding + btnSpacing + btnSize, btnSize, btnSize, "A", activeBtnColor, btnColor, activeTextColor, textColor);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Select
         cKey = "Select";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 250, 100, 100, 50, "Select", activeBtnColor, btnColor, activeTextColor, textColor, 2*this.#cornerRad);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, startBegin, startY, startSize, startSize / 2, "Select", activeBtnColor, btnColor, activeTextColor, textColor, 2*this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
 
         // Start
         cKey = "Start";
-        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, 400, 100, 100, 50, "Start", activeBtnColor, btnColor, activeTextColor, textColor, 2*this.#cornerRad);
+        this.#btnDraw[cKey] = new RectButtonDraw2(buttonMap[cKey], cKey, startBegin + startSpacing + startSize, startY, startSize, startSize / 2, "Start", activeBtnColor, btnColor, activeTextColor, textColor, 2*this.#cornerRad);
         for (let i = 0; i < buttonMap[cKey].length; i++) {
             this.#btnMap[buttonMap[cKey][i]] = cKey;
         }
@@ -297,7 +310,7 @@ export class FlatGBCGamePad extends BaseGamePad {
         super.draw(canvas, buttons);
         let ctx = canvas.getContext("2d");
 
-        var scale = canvas.width < canvas.height ? canvas.width : canvas.height;
+        var scale = canvas.height < (this.#baseWidth / 4) ? canvas.height : canvas.width;
 
         var scalefactor = scale / this.#baseWidth;
 
