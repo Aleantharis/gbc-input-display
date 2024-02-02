@@ -116,13 +116,13 @@ function loadGamePadObj() {
       gamepadDraw = new ImageGBCGamePad(assets.getAsset(activeTheme), keyCfg);
     break;
     case "fgbc-y":
-      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(243, 173, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)");
+      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(243, 173, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)", "rgba(80, 80, 80, 0.2)", "rgba(0, 0, 0, 0.2)");
     break;
     case "fgbc-g":
-      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(173, 243, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)");
+      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(173, 243, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)", "rgba(80, 80, 80, 0.2)", "rgba(0, 0, 0, 0.2)");
     break;
     case "fgbc-r":
-      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(245, 5, 89, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)");
+      gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(245, 5, 89, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)", "rgba(80, 80, 80, 0.2)", "rgba(0, 0, 0, 0.2)");
     break;
     default: 
       stopGame();
