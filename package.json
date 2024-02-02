@@ -1,5 +1,6 @@
 {     
-  "name": "gbc-input-display",     
+  "name": "gbc-input-display",
+  "description": "A customizable input display for controller inputs",
   "version": "0.1.0",     
   "main": "index.js",     
   "scripts": {
