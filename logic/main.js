@@ -280,12 +280,12 @@ document.getElementById("cvGame").addEventListener('contextmenu', triggerConfigR
 document.onkeydown = function (evt) {
   if (controllers) {
     switch (gameState) {
-      case "Running":
-        stopGame();
-        break;
-      case "Stopped":
-        startGame();
-        break;
+      // case "Running":
+      //   stopGame();
+      //   break;
+      // case "Stopped":
+      //   startGame();
+      //   break;
       case "Config":
         if (lastPressedButton.length > 0) {
           keyCfg[gamepadKeys[keyCfgIdx++]] = lastPressedButton;
