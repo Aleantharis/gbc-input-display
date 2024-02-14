@@ -11,6 +11,15 @@ class Rectangle {
         this.height = height
         this.width = width;
     }
+
+    isWithin(x, y, scalefactor = 1) {
+        const scaleX = this.x * scalefactor;
+        const scaleY = this.y * scalefactor;
+        const scaleW = this.width * scalefactor;
+        const scaleH = this.height * scalefactor;
+
+        return ((x >= scaleX && x <= scaleX + scaleW) && (y >= scaleY && y <= scaleY + scaleH));
+    }
 }
 
 class ButtonDraw {
@@ -219,6 +228,9 @@ class BaseGamePad {
         return -1;
     }
 
+    getKeyOnCoords(x, y) {
+    }
+
     draw(canvas, buttons) {
     }
 }
@@ -237,6 +249,21 @@ export class FlatGBCGamePad extends BaseGamePad {
 
     get btnDraw() {
         return this.#btnDraw;
+    }
+
+    getKeyOnCoords(x, y, canvas) {
+        var realHeight = (this.#baseHeight/this.#baseWidth) * canvas.width;
+        var scalefactor = canvas.height < realHeight ? ((canvas.height / realHeight) * canvas.width) / this.#baseWidth : canvas.width / this.#baseWidth;
+
+        var keyFound = null;
+        this.#btnMap.forEach(mapKey => {
+            const btn = this.#btnDraw[mapKey];
+            if(btn.rec.isWithin(x, y, scalefactor)) {
+                keyFound = btn.name;
+            }
+        });
+
+        return keyFound;
     }
     
     #addKeyToMap(cKey, buttonMap) {

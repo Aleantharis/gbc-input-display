@@ -32,6 +32,7 @@ var gamepadKeys = ["Up", "Down", "Left", "Right", "B", "A", "Start", "Select"];
 var keyCfg = {};
 var lastPressedButton = [];
 var keyCfgIdx = -1;
+var singleKey = false;
 
 // "Loading", "Stopped", "Running", "Config", "NoCfg"
 var gameState = "Loading";
@@ -111,23 +112,23 @@ function draw() {
 }
 
 function loadGamePadObj() {
-  switch(activeTheme) {
+  switch (activeTheme) {
     case "gbc":
       gamepadDraw = new ImageGBCGamePad(assets.getAsset(activeTheme), keyCfg);
-    break;
+      break;
     case "fgbc-y":
       gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(243, 173, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)", "rgba(80, 80, 80, 0.2)", "rgba(0, 0, 0, 0.2)");
-    break;
+      break;
     case "fgbc-g":
       gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(173, 243, 4, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)", "rgba(80, 80, 80, 0.2)", "rgba(0, 0, 0, 0.2)");
-    break;
+      break;
     case "fgbc-r":
       gamepadDraw = new FlatGBCGamePad(keyCfg, "rgba(245, 5, 89, 1)", "rgba(255, 255, 255, 1)", "rgba(80, 80, 80, 1)", "rgba(0, 0, 0, 1)", "rgba(80, 80, 80, 0.2)", "rgba(0, 0, 0, 0.2)");
-    break;
-    default: 
+      break;
+    default:
       stopGame();
       console.log("theme could not be found");
-    break;
+      break;
   }
 }
 
@@ -146,7 +147,7 @@ function startGame() {
   }
 
   if (JSON.stringify(keyCfg) !== '{}') {
-    loadGamePadObj();    
+    loadGamePadObj();
     document.getElementById("lbControllerInfo").title = JSON.stringify(keyCfg);
   }
   else {
@@ -167,11 +168,12 @@ function updateActiveTheme() {
 
   activeTheme = document.getElementById("sTheme").value;
   loadGamePadObj();
-  
+
   if (controllers[activeCtrl]) {
     startGame();
   }
 }
+updateActiveTheme();
 document.getElementById("sTheme").addEventListener("change", updateActiveTheme);
 
 function updateCtrlLabel() {
@@ -210,7 +212,7 @@ function btnCfgSelectorchanged() {
   //load cfg from 
   loadCfg();
 
-  if (keyCfg && (!JSON.stringify(keyCfg) !== '{}') ) {
+  if (keyCfg && (!JSON.stringify(keyCfg) !== '{}')) {
     if (gameState === "NoCfg") {
       gameState = "Stopped";
     }
@@ -258,7 +260,8 @@ function padDisconnectedListener(event) {
 }
 
 function triggerConfigRead(event) {
-	event.preventDefault();
+  event.preventDefault();
+  singleKey = false;
   keyCfg = {};
   lastPressedButton = [];
   keyCfgIdx = 0;
@@ -271,11 +274,48 @@ function triggerConfigRead(event) {
   gameState = "Config";
 }
 
+function getMousePos(evt) {
+  var rect = canvas.getBoundingClientRect(), // abs. size of element
+    scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for x
+    scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
+
+  return {
+    x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+    y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+  }
+}
+
+function triggerSingleButtonConfigRead(event) {
+  if (!(gamepadDraw && gameState != "Config")) {
+    return;
+  }
+  event.preventDefault();
+
+  singleKey = true;
+
+  //determine where was clicked on the canvas
+  var pos = getMousePos(event);
+  const key = gamepadDraw.getKeyOnCoords(pos.x, pos.y, canvas)
+  console.log(key);
+
+  if (key) {
+    lastPressedButton = [];
+    keyCfgIdx = gamepadKeys.indexOf(key);
+
+    if (gameState === "Stopped") {
+      gameState = "Config";
+      startGame();
+    }
+    gameState = "Config";
+  }
+}
+
 window.addEventListener("gamepadconnected", padConnectedListener);
 window.addEventListener("gamepaddisconnected", padDisconnectedListener);
 document.getElementById("lbControllerInfo").innerText = "Please press a button on your controller to start!"
 document.getElementById("lbControllerInfo").addEventListener('contextmenu', triggerConfigRead);
 document.getElementById("cvGame").addEventListener('contextmenu', triggerConfigRead);
+document.getElementById("cvGame").addEventListener('click', triggerSingleButtonConfigRead);
 
 document.onkeydown = function (evt) {
   if (controllers) {
@@ -290,7 +330,7 @@ document.onkeydown = function (evt) {
         if (lastPressedButton.length > 0) {
           keyCfg[gamepadKeys[keyCfgIdx++]] = lastPressedButton;
           lastPressedButton = [];
-          if (keyCfgIdx == gamepadKeys.length) {
+          if (keyCfgIdx == gamepadKeys.length || singleKey) {
             gameState = "Running";
             window.localStorage.setItem("gbc-key-cfg-" + activeCfg, JSON.stringify(keyCfg));
             startGame();
@@ -302,3 +342,7 @@ document.onkeydown = function (evt) {
 };
 
 // TODO: move all non-ui specific logic to seperate file, for electron app.
+
+window.bridge && window.bridge.sendCfgs((event, settings) => {
+  console.log(settings);
+});
